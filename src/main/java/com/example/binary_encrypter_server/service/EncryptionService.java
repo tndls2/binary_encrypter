@@ -2,7 +2,6 @@ package com.example.binary_encrypter_server.service;
 
 import com.example.binary_encrypter_server.domain.EncryptionLog;
 import com.example.binary_encrypter_server.dto.EncryptionLogRequestDTO;
-import com.example.binary_encrypter_server.dto.EncryptionLogResponseDTO;
 import com.example.binary_encrypter_server.dto.EncryptionResponseDTO;
 import com.example.binary_encrypter_server.infrastructure.EncryptionLogRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class EncryptionService {
@@ -40,6 +38,7 @@ public class EncryptionService {
     }
 
     /* 암호화 */
+    @Transactional(readOnly = false)
     public EncryptionResponseDTO encrypt(byte[] content) throws Exception {
         Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         byte[] iv = generateIV(); // IV 생성

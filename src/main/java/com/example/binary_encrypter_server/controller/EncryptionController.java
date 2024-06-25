@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("")  //todo: 나중에 encryption으로 수정
+@RequestMapping("/encryption")
 public class EncryptionController {
     private final EncryptionService encryptionService;
     private final FileService fileService;
@@ -21,7 +21,7 @@ public class EncryptionController {
     /*
      * 암호화 이력 전체 조회
      */
-    @GetMapping("/encryption/list")
+    @GetMapping("/list")
     public List<EncryptionLog> getAllEncryptionLogsOrderByDesc() {
         List<EncryptionLog> encryptionLogList = encryptionService.getAllEncryptionLogsOrderByDesc();
         return encryptionLogList;
@@ -30,13 +30,13 @@ public class EncryptionController {
     /*
      * 특정 파일 암호화: EncryptionLog 객체 생성
      */
-    @PostMapping("/encryption")
+    @PostMapping("/")
     public ResponseEntity<?> encryptContent(@RequestBody FileRequestDTO fileRequestDTO) throws Exception {
         // 1. 해당 파일 내용 암호화
         EncryptionResponseDTO encryptionResponseDto = encryptionService.encrypt(fileRequestDTO.getContent());
 
         // 3. 암호화한 내용과 새로운 이름으로 새로운 파일 저장
-        String originName = fileRequestDTO.getFilename();
+        String originName = fileRequestDTO.getFileName();
         String newName = fileService.createFileName(originName, "_enc");
 
         // 4. 암호화 이력 생성
