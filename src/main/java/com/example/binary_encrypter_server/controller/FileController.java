@@ -30,7 +30,9 @@ public class FileController {
     }
 
 
-    /* 바이너리 파일 업로드 */
+    /*
+     * 바이너리 파일 업로드
+     */
     @PostMapping("/file/upload")
     public ResponseEntity<?> uploadFile(MultipartFile file, RedirectAttributes attributes) throws IOException {
         // file 예외상황 처리
@@ -70,5 +72,4 @@ public class FileController {
 
         return new ResponseEntity<>(binaryFile, headers, HttpStatus.OK);
     }
-
 }

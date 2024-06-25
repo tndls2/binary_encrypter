@@ -67,4 +67,16 @@ public class FileService {
         Path filePath = Paths.get(FILE_UPLOAD_PATH).resolve(filename).normalize();
         return Files.readAllBytes(filePath);
     }
+
+
+    /*
+     * 새로운 파일명 생성: 파일확장자와 구분지어 파일명 끝에 end 문자열 합성
+     */
+    public String createFileName(String originName, String end){
+        String newFileName = originName.substring(0, originName.lastIndexOf('.'))
+                + end
+                + originName.substring(originName.lastIndexOf('.'));
+
+        return newFileName;
+    }
 }

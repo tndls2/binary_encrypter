@@ -1,0 +1,50 @@
+package com.example.binary_encrypter_server.controller;
+import com.example.binary_encrypter_server.domain.EncryptionLog;
+import com.example.binary_encrypter_server.dto.EncryptionLogRequestDTO;
+import com.example.binary_encrypter_server.dto.EncryptionResponseDTO;
+import com.example.binary_encrypter_server.dto.FileRequestDTO;
+import com.example.binary_encrypter_server.service.EncryptionService;
+import com.example.binary_encrypter_server.service.FileService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("")  //todo: 나중에 encryption으로 수정
+public class EncryptionController {
+    private final EncryptionService encryptionService;
+    private final FileService fileService;
+
+    /*
+     * 암호화 이력 전체 조회
+     */
+    @GetMapping("/encryption/list")
+    public List<EncryptionLog> getAllEncryptionLogsOrderByDesc() {
+        List<EncryptionLog> encryptionLogList = encryptionService.getAllEncryptionLogsOrderByDesc();
+        return encryptionLogList;
+    }
+
+    /*
+     * 특정 파일 암호화: EncryptionLog 객체 생성
+     */
+    @PostMapping("/encryption")
+    public ResponseEntity<?> encryptContent(@RequestBody FileRequestDTO fileRequestDTO) throws Exception {
+        // 1. 해당 파일 내용 암호화
+        EncryptionResponseDTO encryptionResponseDto = encryptionService.encrypt(fileRequestDTO.getContent());
+
+        // 3. 암호화한 내용과 새로운 이름으로 새로운 파일 저장
+        String originName = fileRequestDTO.getFilename();
+        String newName = fileService.createFileName(originName, "_enc");
+
+        // 4. 암호화 이력 생성
+        EncryptionLogRequestDTO requestDTO = new EncryptionLogRequestDTO(
+                originName, newName, encryptionResponseDto.getIv()
+        );
+        Long encryptionLogId = encryptionService.createEncryptionLog(requestDTO);
+        return ResponseEntity.ok("File Encryption successfully: " + encryptionLogId);
+    }
+
+}
