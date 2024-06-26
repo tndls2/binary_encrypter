@@ -5,6 +5,7 @@ import com.example.binary_encrypter_server.dto.response.EncryptResponseDTO;
 import com.example.binary_encrypter_server.dto.request.FileRequestDTO;
 import com.example.binary_encrypter_server.service.EncryptionService;
 import com.example.binary_encrypter_server.service.FileService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class EncryptionController {
      * 암호화 이력 전체 조회
      */
     @GetMapping("/list")
-    public List<EncryptionLogResponseDTO> getAllEncryptionLogsOrderByDesc() {
-        List<EncryptionLogResponseDTO> encryptionLogList = encryptionService.getAllEncryptionLogsOrderByDesc();
-        return encryptionLogList;
+    public ResponseEntity<?> getAllEncryptionLogsOrderByDesc(@RequestParam(value="page", defaultValue="0") int page, @RequestParam(value="size", defaultValue ="5") int size) {
+        Page<EncryptionLogResponseDTO> encryptionLogList = encryptionService.getAllEncryptionLogsOrderByDesc(page, size);
+        return ResponseEntity.ok(DefaultResponse.res(StatusCode.OK, ResponseMessage.GET_ALL_ENCRYPTION_LOG_SUCCESS, encryptionLogList));
     }
 
     /*

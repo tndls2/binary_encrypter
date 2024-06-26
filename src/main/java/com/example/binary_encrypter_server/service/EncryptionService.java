@@ -6,6 +6,8 @@ import com.example.binary_encrypter_server.dto.response.EncryptionLogResponseDTO
 import com.example.binary_encrypter_server.dto.response.EncryptResponseDTO;
 import com.example.binary_encrypter_server.infrastructure.EncryptionLogRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +16,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -69,16 +69,15 @@ public class EncryptionService {
         return new EncryptResponseDTO(encryptedContent, stringIV);
     }
 
-    // 암호화 이력 조회
-    public List<EncryptionLogResponseDTO> getAllEncryptionLogsOrderByDesc() {
-        List<EncryptionLog> encryptionLogList = encryptionLogRepository.findAllByOrderByIdDesc();
-        return encryptionLogList.stream()
-                .map(EncryptionLogResponseDTO::fromEntity)
-                .collect(Collectors.toList());
+    public Page<EncryptionLogResponseDTO> getAllEncryptionLogsOrderByDesc(int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        return encryptionLogRepository.findAllByOrderByIdDesc(pageable)
+                .map(EncryptionLogResponseDTO::fromEntity);
     }
+
     // 암호화 이력 생성
-    public Long createEncryptionLog(EncryptionLogRequestDTO requestDTO) {
+    public EncryptionLogResponseDTO createEncryptionLog(EncryptionLogRequestDTO requestDTO) {
         EncryptionLog encryptionLog = encryptionLogRepository.save(requestDTO.toEntity());
-        return encryptionLog.getId();
+        return EncryptionLogResponseDTO.fromEntity(encryptionLog);
     }
 }
