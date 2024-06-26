@@ -6,7 +6,11 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public class EncryptionErrorCode implements ErrorCode{
+public enum EncryptionErrorCode implements ErrorCode{
+    GET_CIPHER_FAIL(HttpStatus.NOT_FOUND, "해당 암호를 가져오지 못했습니다."),
+    ENCRYPT_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "암호화에 실패했습니다."),
+    INVALID_PAGE_COMPONENT(HttpStatus.BAD_REQUEST, "유효하지 않은 page, size값 입니다."),
+    INVALID_CIPHER_PARAMETER(HttpStatus.BAD_REQUEST, "유효하지 않은 key 또는 IV입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
