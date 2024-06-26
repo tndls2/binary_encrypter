@@ -14,12 +14,6 @@ public class DefaultResponse<T> {
     private String responseMessage;
     private T data;
 
-    public DefaultResponse(final int statusCode, final String responseMessage) {
-        this.statusCode = statusCode;
-        this.responseMessage = responseMessage;
-        this.data = null;
-    }
-
     public static <T> DefaultResponse<T> res(final int statusCode, final String responseMessage) {
         return res(statusCode, responseMessage, null);
     }
