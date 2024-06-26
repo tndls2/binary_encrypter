@@ -21,6 +21,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/encryption")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class EncryptionController {
     private final EncryptionService encryptionService;
     private final FileService fileService;

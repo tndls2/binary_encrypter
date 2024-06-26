@@ -3,6 +3,9 @@ package com.example.binary_encrypter_server.service;
 import com.example.binary_encrypter_server.dto.request.FileRequestDTO;
 import com.example.binary_encrypter_server.dto.response.FileResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +18,11 @@ import java.nio.file.Paths;
 @Service
 public class FileService {
     private static final String FILE_UPLOAD_PATH = "src/main/resources/file/";
+    private static final String FILE_DOWNLOAD_PATH = "src/main/resources/file/";
+
+    // 파일 리소스를 가져오기 위한 ResourceLoader 가져오기 (스프링의 ResourceLoader)
+    private final ResourceLoader resourceLoader;
+
 
     /*
      * 파일을 특정 경로에 업로드(저장)
@@ -63,6 +71,20 @@ public class FileService {
         // 2. File Response Dto 생성
         FileResponseDTO fileDTO = new FileResponseDTO(fileName, content);
         return fileDTO;
+    }
+
+    // 경로로 리소스를 찾아온다
+    // 경로로 리소스를 찾아온다
+    // 파일 다운로드 메서드
+    public Resource fileDownload(String filename) {
+        Path filePath = Paths.get(FILE_DOWNLOAD_PATH).resolve(filename).normalize();
+        Resource resource = resourceLoader.getResource("file:" + filePath.toString());
+
+        if (resource.exists() || resource.isReadable()) {
+            return resource;
+        } else {
+            throw new RuntimeException("파일을 찾을 수 없습니다: " + filename);
+        }
     }
 
     /* 특정 파일명에 해당하는 파일 가져오기 */

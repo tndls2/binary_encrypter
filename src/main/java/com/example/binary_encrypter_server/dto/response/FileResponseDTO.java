@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FileResponseDTO {
-    private String filename;
+    private String fileName;
     private byte[] content;
 }
