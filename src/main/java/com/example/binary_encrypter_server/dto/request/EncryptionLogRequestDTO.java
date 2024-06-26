@@ -1,4 +1,4 @@
-package com.example.binary_encrypter_server.dto;
+package com.example.binary_encrypter_server.dto.request;
 
 import com.example.binary_encrypter_server.domain.EncryptionLog;
 import lombok.*;

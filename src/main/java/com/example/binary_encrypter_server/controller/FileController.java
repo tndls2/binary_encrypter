@@ -1,6 +1,6 @@
 package com.example.binary_encrypter_server.controller;
 
-import com.example.binary_encrypter_server.dto.FileResponseDTO;
+import com.example.binary_encrypter_server.dto.response.FileResponseDTO;
 import com.example.binary_encrypter_server.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

@@ -1,7 +1,7 @@
 package com.example.binary_encrypter_server.service;
 
-import com.example.binary_encrypter_server.dto.FileRequestDTO;
-import com.example.binary_encrypter_server.dto.FileResponseDTO;
+import com.example.binary_encrypter_server.dto.request.FileRequestDTO;
+import com.example.binary_encrypter_server.dto.response.FileResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

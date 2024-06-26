@@ -1,4 +1,4 @@
-package com.example.binary_encrypter_server.dto;
+package com.example.binary_encrypter_server.dto.response;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EncryptionResponseDTO {
+public class EncryptResponseDTO {
     private byte[] encryptedContent;
     private String iv;
 }

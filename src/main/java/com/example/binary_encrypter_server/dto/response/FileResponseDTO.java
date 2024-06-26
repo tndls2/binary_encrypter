@@ -1,4 +1,4 @@
-package com.example.binary_encrypter_server.dto;
+package com.example.binary_encrypter_server.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

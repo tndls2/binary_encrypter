@@ -1,8 +1,8 @@
 package com.example.binary_encrypter_server.controller;
-import com.example.binary_encrypter_server.domain.EncryptionLog;
-import com.example.binary_encrypter_server.dto.EncryptionLogRequestDTO;
-import com.example.binary_encrypter_server.dto.EncryptionResponseDTO;
-import com.example.binary_encrypter_server.dto.FileRequestDTO;
+import com.example.binary_encrypter_server.dto.request.EncryptionLogRequestDTO;
+import com.example.binary_encrypter_server.dto.response.EncryptionLogResponseDTO;
+import com.example.binary_encrypter_server.dto.response.EncryptResponseDTO;
+import com.example.binary_encrypter_server.dto.request.FileRequestDTO;
 import com.example.binary_encrypter_server.service.EncryptionService;
 import com.example.binary_encrypter_server.service.FileService;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +22,8 @@ public class EncryptionController {
      * 암호화 이력 전체 조회
      */
     @GetMapping("/list")
-    public List<EncryptionLog> getAllEncryptionLogsOrderByDesc() {
-        List<EncryptionLog> encryptionLogList = encryptionService.getAllEncryptionLogsOrderByDesc();
+    public List<EncryptionLogResponseDTO> getAllEncryptionLogsOrderByDesc() {
+        List<EncryptionLogResponseDTO> encryptionLogList = encryptionService.getAllEncryptionLogsOrderByDesc();
         return encryptionLogList;
     }
 
@@ -33,7 +33,7 @@ public class EncryptionController {
     @PostMapping("/")
     public ResponseEntity<?> encryptContent(@RequestBody FileRequestDTO fileRequestDTO) throws Exception {
         // 1. 해당 파일 내용 암호화
-        EncryptionResponseDTO encryptionResponseDto = encryptionService.encrypt(fileRequestDTO.getContent());
+        EncryptResponseDTO encryptResponseDto = encryptionService.encrypt(fileRequestDTO.getContent());
 
         // 3. 암호화한 내용과 새로운 이름으로 새로운 파일 저장
         String originName = fileRequestDTO.getFileName();
@@ -41,7 +41,7 @@ public class EncryptionController {
 
         // 4. 암호화 이력 생성
         EncryptionLogRequestDTO requestDTO = new EncryptionLogRequestDTO(
-                originName, newName, encryptionResponseDto.getIv()
+                originName, newName, encryptResponseDto.getIv()
         );
         Long encryptionLogId = encryptionService.createEncryptionLog(requestDTO);
         return ResponseEntity.ok("File Encryption successfully: " + encryptionLogId);
