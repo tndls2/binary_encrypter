@@ -1,6 +1,11 @@
 package com.example.binary_encrypter_server.controller;
 
+import com.example.binary_encrypter_server.dto.ResponseMessage;
+import com.example.binary_encrypter_server.dto.StatusCode;
+import com.example.binary_encrypter_server.dto.response.DefaultResponse;
 import com.example.binary_encrypter_server.dto.response.FileResponseDTO;
+import com.example.binary_encrypter_server.exceptions.CustomException;
+import com.example.binary_encrypter_server.exceptions.FileErrorCode;
 import com.example.binary_encrypter_server.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -31,11 +36,9 @@ public class FileController {
             try {
                 // 업로드 파일 저장
                 FileResponseDTO fileDto = fileService.uploadFile(file);
-                return ResponseEntity.ok("File uploaded successfully: " + fileDto.getFilename() + fileDto.getContent());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
+                return ResponseEntity.ok(DefaultResponse.res(StatusCode.OK, ResponseMessage.UPLOAD_FILE, fileDto));
+            } catch (IOException e) {
+                throw new CustomException(FileErrorCode.UPLOAD_FILE_FAIL);
             }
         } else {
             // 바이너리 파일이 아닌 경우 에러 발생
@@ -48,15 +51,23 @@ public class FileController {
      * 바이너리 파일 다운로드: 파라미터의 파일명(name)으로 조회 후 다운로드
      */
     @GetMapping("/{name}/download")
-    public ResponseEntity<?> downloadFile(@PathVariable("name") String name) throws IOException {
+    public ResponseEntity<?> downloadFile(@PathVariable("name") String name) {
         // 파일 로드
-        byte[] binaryFile = fileService.findFileByName(name);
+        byte[] binaryFile = new byte[0];
+
+        try {
+            binaryFile = fileService.findFileByName(name);
+        } catch (IOException e) {
+            throw new CustomException(FileErrorCode.DOWNLOAD_FILE_FAIL);
+        }
 
         // HTTP 헤더 설정 (파일 다운로드를 위한 설정)
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", name);
 
-        return new ResponseEntity<>(binaryFile, headers, HttpStatus.OK);
+        ResponseEntity<byte[]> response = new ResponseEntity<>(binaryFile, headers, HttpStatus.OK);
+
+        return ResponseEntity.ok(DefaultResponse.res(StatusCode.OK, ResponseMessage.DOWNLOAD_FILE, response));
     }
 }

@@ -58,7 +58,7 @@ public class FileService {
         Path filePath = Paths.get(FILE_UPLOAD_PATH).resolve(fileName).normalize();
         byte[] content = fileRequestDTO.getContent();
         Files.createDirectories(filePath.getParent()); // 디렉토리 생성
-        Files.write(filePath, content);
+        Files.write(filePath, content); // 파일 생성
 
         // 2. File Response Dto 생성
         FileResponseDTO fileDTO = new FileResponseDTO(fileName, content);
