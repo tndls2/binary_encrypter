@@ -7,6 +7,7 @@ import com.example.binary_encrypter_server.exceptions.CustomException;
 import com.example.binary_encrypter_server.exceptions.EncryptionErrorCode;
 import com.example.binary_encrypter_server.infrastructure.EncryptionLogRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,9 @@ import java.security.SecureRandom;
 public class EncryptionService {
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
-    private static final String SECRET_KEY_STRING = "0123456789abcdef";
     private static final int IV_LENGTH = 16;
+    @Value("${aes.key}")
+    private String SECRET_KEY_STRING;
     private final EncryptionLogRepository encryptionLogRepository;
 
     /**
@@ -51,41 +53,18 @@ public class EncryptionService {
      *  2. 암호화
      *  3. IV 형변환
      * @param content 파일 내용
-     * @throws CustomException
-     *          1. 암호를 가져오지 못한 경우
-     *          2. 암호에 유효하지 않은 key 또는 IV을 사용한 경우
-     *          3. 암호화 실패한 경우
      * @return
      *      1. 암호화된 내용
      *      2. IV값
      */
     @Transactional(readOnly = false)
     public EncryptResponseDTO encrypt(byte[] content) {
-        // 암호 가져오기
-        Cipher cipher = null;
-        try {
-            cipher = Cipher.getInstance(TRANSFORMATION);
-        } catch (Exception e) {
-            throw new CustomException(EncryptionErrorCode.GET_CIPHER_FAIL);
-        }
-
+        Cipher cipher = getCipherInstance(); // Cipher 가져오기
+        SecretKey key = getSecretKey(SECRET_KEY_STRING); // key 생성
         byte[] iv = generateIV(); // IV 생성
-        SecretKey key = getSecretKey(); // key 생성
-
-        // IV와 key를 cipher에 설정
-        try {
-            cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));
-        } catch (Exception e) {
-            throw new CustomException(EncryptionErrorCode.INVALID_CIPHER_PARAMETER);
-        }
 
         // 암호화
-        byte[] encryptedContent = new byte[0];
-        try {
-            encryptedContent = cipher.doFinal(content);
-        } catch (Exception e) {
-            throw new CustomException(EncryptionErrorCode.ENCRYPT_FAIL);
-        }
+        byte[] encryptedContent = useCipher(cipher, key, iv, content);
 
         // IV를 16진수 문자열로 변환(db 저장에 적절한 형태로 변환)
         String stringIV = byteArrayToHexaString(iv);
@@ -94,6 +73,18 @@ public class EncryptionService {
         return new EncryptResponseDTO(encryptedContent, stringIV);
     }
 
+    /**
+     * Cipher 가져오기
+     * @throws CustomException 암호를 가져오지 못한 경우
+     * @return cipher 객체
+     */
+    public Cipher getCipherInstance(){
+        try {
+            return Cipher.getInstance(TRANSFORMATION);
+        } catch (Exception e) {
+            throw new CustomException(EncryptionErrorCode.GET_CIPHER_FAIL);
+        }
+    }
     /**
      * IV값 랜덤 생성
      * @return iv iv값
@@ -108,9 +99,28 @@ public class EncryptionService {
      * 알고리즘에 부합한 형태의 키 생성
      * @return key
      */
-    public static SecretKey getSecretKey() {
-        SecretKeySpec key = new SecretKeySpec(SECRET_KEY_STRING.getBytes(), ALGORITHM);
+    public SecretKey getSecretKey(String stringSecretKey) {
+        SecretKeySpec key = new SecretKeySpec(stringSecretKey.getBytes(), ALGORITHM);
         return key;
+    }
+
+    /**
+     * Cipher로 암호화 진행
+     * @param cipher 사용할 cipher
+     * @param key key값
+     * @param iv iv값
+     * @param content 암호화할 내용
+     * @throws CustomException 암호화에 실패한 경우
+     * @return 암호화된 내용
+     */
+    public byte[] useCipher(Cipher cipher, SecretKey key, byte[] iv, byte[] content){
+        try {
+            cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(iv));  // IV와 key를 cipher에 설정
+            byte[] encryptedContent = cipher.doFinal(content); // 암호화
+            return encryptedContent;
+        } catch (Exception e) {
+            throw new CustomException(EncryptionErrorCode.ENCRYPT_FAIL);
+        }
     }
 
     /**

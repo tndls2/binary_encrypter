@@ -4,54 +4,90 @@ import com.example.binary_encrypter_server.dto.request.EncryptionLogRequestDTO;
 import com.example.binary_encrypter_server.dto.response.EncryptResponseDTO;
 import com.example.binary_encrypter_server.dto.response.EncryptionLogResponseDTO;
 import com.example.binary_encrypter_server.exceptions.CustomException;
+import com.example.binary_encrypter_server.exceptions.EncryptionErrorCode;
 import com.example.binary_encrypter_server.infrastructure.EncryptionLogRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 @SpringBootTest
+@TestPropertySource("classpath:application-test.properties")
+@Transactional
 @ExtendWith(MockitoExtension.class)
 class EncryptionServiceTest {
+    private static final int IV_LENGTH = 16;
 
     @Mock
     EncryptionLogRepository encryptionLogRepository;
-
-//    @InjectMocks
+    @Autowired
+    @InjectMocks
     EncryptionService encryptionService;
+
+    @Value("${aes.key}")
+    private String testSecretKeyString;  //application-test.properties 참조
 
     @BeforeEach
     void setUp() {
-        this.encryptionService = new EncryptionService(encryptionLogRepository);
+        // encryptionService 객체의 SECRET_KEY_STRING 필드 주입
+        ReflectionTestUtils.setField(encryptionService, "SECRET_KEY_STRING", testSecretKeyString);
+    }
+
+    @Nested
+    @DisplayName("암호화 이력 최신순 조회하는 메소드 테스트")
+    class getAllEncryptionLogsOrderByDesc {
+        @Test
+        @DisplayName("입력된 page와 size가 조건에 부합하면 조회 실행")
+        void getAllEncryptionLogsOrderByDescSuccess() {
+            // given
+            int page = 0;
+            int size = 5;
+            PageRequest pageable = PageRequest.of(page, size);
+
+            // when
+            Page<EncryptionLogResponseDTO> result = encryptionService.getAllEncryptionLogsOrderByDesc(page, size);
+
+            // then
+            assertEquals(0, result.getTotalElements());
+        }
+
+        @Test
+        @DisplayName("입력된 page와 size가 조건에 부합하지 않으면 INVALID_PAGE_COMPONENT 발생")
+        void getAllEncryptionLogsOrderByDescFail() {
+            // given
+            int page = -1;
+            int size = -1;
+
+            // when, then
+            assertThatThrownBy(() -> encryptionService.getAllEncryptionLogsOrderByDesc(page, size))
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", EncryptionErrorCode.INVALID_PAGE_COMPONENT);
+        }
     }
 
     @Test
-    @DisplayName("암호화 이력 최신순 조회 - 페이지 크기 10, 첫 페이지")
-    void getAllEncryptionLogsOrderByDesc() {
-        // given
-        int page = 0;
-        int size = 10;
-        PageRequest pageable = PageRequest.of(page, size);
-        when(encryptionLogRepository.findAllByOrderByIdDesc(pageable)).thenReturn(Page.empty());
-        // when
-        Page<EncryptionLogResponseDTO> result = encryptionService.getAllEncryptionLogsOrderByDesc(page, size);
-        // then
-        assertEquals(0, result.getTotalElements());
-    }
-
-
-    @Test
-    @DisplayName("AES-128 암호화")
+    @DisplayName("주어진 content를 AES-128 암호화하는 메소드 테스트")
     void encrypt() {
         // given
         byte[] content = "Test Content".getBytes();
@@ -66,50 +102,81 @@ class EncryptionServiceTest {
     }
 
     @Test
-    @DisplayName("AES-128 암호화 - 잘못된 content 입력")
-    void encrypt_InvalidContent() {
-        // given
-        byte[] content = null;
-
-        // when, then
-        assertThrows(CustomException.class, () -> encryptionService.encrypt(content),
-                "암호화 실패 예외가 발생해야 합니다.");
+    @DisplayName("ipher 가져오는 메소드 테스트")
+    void getCipherInstance(){
+        assertDoesNotThrow(() -> encryptionService.getCipherInstance());
     }
 
     @Test
-    @DisplayName("IV값 생성")
+    @DisplayName("IV값 랜덤 생성 메소드 테스트")
     void generateIV() {
-        // when
+        // given, when
         byte[] iv = EncryptionService.generateIV();
 
         // then
         assertNotNull(iv);
-        assertEquals(16, iv.length);
+        assertEquals(IV_LENGTH, iv.length);
     }
 
     @Test
-    @DisplayName("SecretKey 생성")
+    @DisplayName("알고리즘에 부합한 형태의 키 생성 메소드 테스트")
     void getSecretKey() {
-        // when
-        SecretKey secretKey = EncryptionService.getSecretKey();
+        // given, when
+        SecretKey secretKey = encryptionService.getSecretKey(testSecretKeyString);
 
         // then
         assertNotNull(secretKey);
-        assertEquals("AES", secretKey.getAlgorithm());
     }
 
+    @Nested
+    @DisplayName("Cipher로 암호화 진행하는 메소드 테스트")
+    class useCipher {
+        @Test
+        @DisplayName("Cipher로 암호화된 내용이 반환됨.")
+        void useCipherSuccess() {
+            //given
+            Cipher cipher = encryptionService.getCipherInstance(); // Cipher 가져오기
+            SecretKey key = encryptionService.getSecretKey(testSecretKeyString); // key 생성
+            byte[] iv = encryptionService.generateIV(); // IV 생성
+            byte[] content = "test".getBytes();
+
+            //when
+            byte[] encryptedContent = encryptionService.useCipher(cipher, key, iv, content);
+
+            //then
+            assertNotNull(encryptedContent);
+            assertNotEquals(content, encryptedContent);
+
+        }
+
+        @Test
+        @DisplayName("Cipher에 잘못 값을 기입하면 ENCRYPT_FAIL 발생")
+        void useCipherFaile() {
+            //given
+            Cipher cipher = encryptionService.getCipherInstance();
+            SecretKey key = encryptionService.getSecretKey(testSecretKeyString);
+            byte[] iv = encryptionService.generateIV();
+            byte[] content = null; // content가 null값이 들어가는 오류 발생
+
+            // when, then
+            assertThatThrownBy(() -> encryptionService.useCipher(cipher, key, iv, content))
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", EncryptionErrorCode.ENCRYPT_FAIL);
+
+        }
+    }
     @Test
-    @DisplayName("암호화 이력 생성")
+    @DisplayName("암호화 이력 생성하는 메소드 테스트")
     void createEncryptionLog() {
         // given
         EncryptionLogRequestDTO requestDTO = new EncryptionLogRequestDTO("origin.txt", "encrypted.txt", "123456");
 
-        // when
+        // when, then
         assertDoesNotThrow(() -> encryptionService.createEncryptionLog(requestDTO));
     }
 
     @Test
-    @DisplayName("byte array -> 16진수 문자열 변환")
+    @DisplayName("byte array -> 16진수 문자열 변환하는 메소드 테스트")
     void byteArrayToHexaString() {
         // given
         byte[] bytes = {10, 15, 20, 25};
