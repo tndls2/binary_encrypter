@@ -22,7 +22,6 @@ import java.io.IOException;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class FileController {
     private final FileService fileService;
-    private final EncryptionService encryptionService;
 
     /**
      * 바이너리 파일 업로드 API

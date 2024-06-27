@@ -21,7 +21,8 @@ public class EncryptionLogResponseDTO {
     private String createdAt;
 
     public static EncryptionLogResponseDTO fromEntity(EncryptionLog log) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // datetime 포멧
+        // datetime 포멧
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return new EncryptionLogResponseDTO(
                 log.getId(),
                 log.getOriginFile(),

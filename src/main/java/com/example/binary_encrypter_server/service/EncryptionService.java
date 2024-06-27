@@ -19,6 +19,9 @@ import java.security.SecureRandom;
 
 @RequiredArgsConstructor
 @Service
+/**
+ * 암호화, 암호화 이력 관련 작업을 처리하는 서비스
+ */
 public class EncryptionService {
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
@@ -40,20 +43,6 @@ public class EncryptionService {
         PageRequest pageable = PageRequest.of(page, size);
         return encryptionLogRepository.findAllByOrderByIdDesc(pageable)
                 .map(EncryptionLogResponseDTO::fromEntity);
-    }
-
-    /**
-     * byte array -> 16진수로 변환하여 반환
-     * 출처: https://3edc.tistory.com/21
-     * @param bytes byte array 값
-     * @return hex 값
-     */
-    public static String byteArrayToHexaString(byte[] bytes) {
-        StringBuilder builder = new StringBuilder();
-        for (byte data : bytes) {
-            builder.append(String.format("%02X", data));
-        }
-        return builder.toString();
     }
 
     /**
@@ -109,7 +98,7 @@ public class EncryptionService {
      * IV값 랜덤 생성
      * @return iv iv값
      */
-    private static byte[] generateIV() {
+    public static byte[] generateIV() {
         byte[] iv = new byte[IV_LENGTH];
         new SecureRandom().nextBytes(iv);
         return iv;
@@ -119,7 +108,7 @@ public class EncryptionService {
      * 알고리즘에 부합한 형태의 키 생성
      * @return key
      */
-    private static SecretKey getSecretKey() {
+    public static SecretKey getSecretKey() {
         SecretKeySpec key = new SecretKeySpec(SECRET_KEY_STRING.getBytes(), ALGORITHM);
         return key;
     }
@@ -130,5 +119,19 @@ public class EncryptionService {
      */
     public void createEncryptionLog(EncryptionLogRequestDTO requestDTO) {
         encryptionLogRepository.save(requestDTO.toEntity());
+    }
+
+    /**
+     * byte array -> 16진수로 변환하여 반환
+     * 출처: https://3edc.tistory.com/21
+     * @param bytes byte array 값
+     * @return hex 값
+     */
+    public static String byteArrayToHexaString(byte[] bytes) {
+        StringBuilder builder = new StringBuilder();
+        for (byte data : bytes) {
+            builder.append(String.format("%02X", data));
+        }
+        return builder.toString();
     }
 }
