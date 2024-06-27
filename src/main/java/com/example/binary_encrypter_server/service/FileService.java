@@ -7,6 +7,8 @@ import com.example.binary_encrypter_server.dto.response.FileResponseDTO;
 import com.example.binary_encrypter_server.exceptions.CustomException;
 import com.example.binary_encrypter_server.exceptions.FileErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 
 import org.springframework.core.io.ResourceLoader;
@@ -24,8 +26,10 @@ import java.nio.file.Paths;
  * 바이너리 파일 업로드 및 다운로드를 처리하는 서비스
  */
 public class FileService {
-    private static final String FILE_PATH = "src/main/resources/file/";
+    @Value("${file.path}")
+    private String FILE_PATH;
     private final ResourceLoader resourceLoader;
+    @Autowired
     private final EncryptionService encryptionService;
 
 
@@ -100,7 +104,7 @@ public class FileService {
      *          1. 디렉토리 생성 실패한 경우
      *          2. 지정된 경로에 파일을 저장
      */
-    private Path uploadFileToPath(MultipartFile file){
+    public Path uploadFileToPath(MultipartFile file){
         String fileName = file.getOriginalFilename();
         // 1. 업로드 파일 특정 경로에 저장
         Path filePath = Paths.get(FILE_PATH).toAbsolutePath().normalize();
@@ -124,7 +128,7 @@ public class FileService {
      *          2. 파일을 읽어올 수 없는 경우
      * @return 파일에서 읽어온 byte array
      */
-    private byte[] getFileContent(Path filePath){
+    public byte[] getFileContent(Path filePath){
         if (!Files.exists(filePath) || Files.isDirectory(filePath)) {
             throw new CustomException(FileErrorCode.INVALID_FILE_PATH);
         }
