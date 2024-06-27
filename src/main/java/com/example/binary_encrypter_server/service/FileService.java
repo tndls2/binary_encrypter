@@ -42,7 +42,7 @@ public class FileService {
      *
      *  참고: https://parkadd.tistory.com/139
      * @param file 업로드할 파일
-     * @throws CustomException 업로드한 파일이 binary file이 아닌 경우
+     * @throws CustomException 업로드한 파일이 binary file이 아니거나 file name이 유효하지 않은 경우
      */
     public void uploadFile(MultipartFile file){
         String fileName = file.getOriginalFilename();
@@ -50,7 +50,7 @@ public class FileService {
         if (fileName != null && fileName.endsWith(".bin")) {
             ;
         } else {
-            throw new CustomException(FileErrorCode.NOT_BINARY_FILE);
+            throw new CustomException(FileErrorCode.INVALID_FILE);
         }
 
         // 특정 경로에 파일을 저장
@@ -100,9 +100,7 @@ public class FileService {
     /**
      * 파일을 특정 경로에 저장
      * @param file 파일
-     * @throws IOException
-     *          1. 디렉토리 생성 실패한 경우
-     *          2. 지정된 경로에 파일을 저장
+     * @throws IOException 지정된 경로에 파일을 생성하지 못한 경우
      */
     public Path uploadFileToPath(MultipartFile file){
         String fileName = file.getOriginalFilename();
