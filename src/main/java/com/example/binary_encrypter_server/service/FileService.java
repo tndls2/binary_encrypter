@@ -40,7 +40,8 @@ public class FileService {
      *  3. 암호화된 파일 생성
      *  4. 암호화 내역 저장
      *
-     *  참고: https://parkadd.tistory.com/139
+     *  참고: https://github.com/Gomding/spring-file
+     *
      * @param file 업로드할 파일
      * @throws CustomException 업로드한 파일이 binary file이 아니거나 file name이 유효하지 않은 경우
      */
@@ -80,7 +81,7 @@ public class FileService {
     /**
      * 바이너리 파일 다운로드
      *
-     * 참고: https://parkadd.tistory.com/139
+     * 참고: https://github.com/Gomding/spring-file
      *
      * @param name 다운로드할 파일명
      * @throws CustomException 파일이 존재하지 않거나 읽을 수 없는 경우

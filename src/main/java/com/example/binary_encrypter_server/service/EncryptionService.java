@@ -133,7 +133,9 @@ public class EncryptionService {
 
     /**
      * byte array -> 16진수로 변환하여 반환
-     * 출처: https://3edc.tistory.com/21
+     *
+     * 참고: https://3edc.tistory.com/21
+     *
      * @param bytes byte array 값
      * @return hex 값
      */
