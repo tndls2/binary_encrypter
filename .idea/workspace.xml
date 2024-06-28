@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="afb31133-121c-4a31-b07f-2c6f153250e8" name="Changes" comment="[feature/file] 파일 업로드 기능 추가">
-      <change afterPath="$PROJECT_DIR$/src/components/encryptionLogs/EncryptionLogs.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/encryptionLogs/table/EncryptionLogTable.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/encryptionLogs/table/EncryptionLogTable.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/context/EncryptionLogsContext.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/types/encryptionLog.ts" afterDir="false" />
+    <list default="true" id="afb31133-121c-4a31-b07f-2c6f153250e8" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/binaryFileUpload/BinaryFileUpload.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/binaryFileUpload/BinaryFileUpload.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/binaryFileUpload/BinaryFileUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/binaryFileUpload/BinaryFileUpload.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils/axios.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/axios.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../binary_encrypter_server" beforeDir="false" afterPath="$PROJECT_DIR$/../binary_encrypter_server" afterDir="false" />
     </list>
@@ -17,10 +14,18 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
     <option name="recentBranches">
       <RecentBranches>
         <option name="branchesForRepo">
@@ -76,7 +81,8 @@
       <updated>1719400214298</updated>
       <workItem from="1719400215643" duration="13087000" />
       <workItem from="1719561578807" duration="6719000" />
-      <workItem from="1719568313593" duration="652000" />
+      <workItem from="1719568313593" duration="1235000" />
+      <workItem from="1719569553990" duration="5138000" />
     </task>
     <servers />
   </component>
