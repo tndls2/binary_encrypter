@@ -4,7 +4,6 @@ import com.example.binary_encrypter_server.dto.ResponseMessage;
 import com.example.binary_encrypter_server.dto.StatusCode;
 import com.example.binary_encrypter_server.dto.response.DefaultResponse;
 import com.example.binary_encrypter_server.exceptions.CustomException;
-import com.example.binary_encrypter_server.service.EncryptionService;
 import com.example.binary_encrypter_server.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;

@@ -49,7 +49,7 @@ public class EncryptionService {
 
     /**
      * AES-128 암호화
-     *  1. AES-128 암호 설정
+     * @apiNote  1. AES-128 암호 설정
      *  2. 암호화
      *  3. IV 형변환
      * @param content 파일 내용
@@ -132,14 +132,12 @@ public class EncryptionService {
     }
 
     /**
-     * byte array -> 16진수로 변환하여 반환
-     *
-     * 참고: https://3edc.tistory.com/21
-     *
+     * byte array -> 16진수로 변환하여 반환*
      * @param bytes byte array 값
      * @return hex 값
      */
     public static String byteArrayToHexaString(byte[] bytes) {
+        // 참고: https://3edc.tistory.com/21
         StringBuilder builder = new StringBuilder();
         for (byte data : bytes) {
             builder.append(String.format("%02X", data));

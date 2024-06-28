@@ -35,17 +35,16 @@ public class FileService {
 
     /**
      * 바이너리 파일 업로드 처리
+     * @apiNote
      *  1. 업로드 파일 특정 경로에 저장
      *  2. 파일의 내용 암호화
      *  3. 암호화된 파일 생성
      *  4. 암호화 내역 저장
-     *
-     *  참고: https://github.com/Gomding/spring-file
-     *
      * @param file 업로드할 파일
      * @throws CustomException 업로드한 파일이 binary file이 아니거나 file name이 유효하지 않은 경우
      */
     public void uploadFile(MultipartFile file){
+        // 참고: https://github.com/Gomding/spring-file
         String fileName = file.getOriginalFilename();
         // file 유효성 체크
         if (fileName != null && fileName.endsWith(".bin")) {
@@ -80,14 +79,12 @@ public class FileService {
 
     /**
      * 바이너리 파일 다운로드
-     *
-     * 참고: https://github.com/Gomding/spring-file
-     *
      * @param name 다운로드할 파일명
      * @throws CustomException 파일이 존재하지 않거나 읽을 수 없는 경우
      * @return resource 파일
      */
     public Resource downloadFile(String name) {
+        // 참고: https://github.com/Gomding/spring-file
         Path filePath = Paths.get(FILE_PATH).resolve(name).normalize();
         Resource resource = resourceLoader.getResource("file:" + filePath.toString());
 
@@ -158,7 +155,7 @@ public class FileService {
 
     /**
      * 새로운 파일명 생성
-     * - 파일확장자와 구분지어 파일명 끝에 end 문자열 합성
+     * @apiNote 파일확장자와 구분지어 파일명 끝에 end 문자열 합성
      * @param originName 기존 파일명
      * @param end 새로 붙여질 어미
      * @return newFileName 새로운 파일명
