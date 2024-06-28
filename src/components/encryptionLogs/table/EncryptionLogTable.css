@@ -1,0 +1,17 @@
+table,
+th,
+td {
+    border: 1px solid #c8c8c8;
+    padding: 5px;
+}
+
+table {
+    width: 80vw;
+    border-collapse: collapse;
+}
+
+.download-td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+}
