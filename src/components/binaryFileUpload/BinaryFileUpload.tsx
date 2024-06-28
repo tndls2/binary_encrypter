@@ -50,6 +50,9 @@ export default function BinaryFileUpload() {
 
     /**
      * 파일 업로드 핸들러
+     * @description 업로드 요청이 처리가 3초 이상 걸리는 경우에는 프로그레스 바로 진행상황을 보여줌
+     * 참고: https://hagohobby.tistory.com/22
+     * 참고: https://velog.io/@nike7on/React%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%ED%8C%8C%EC%9D%BC-%EC%97%85%EB%A1%9C%EB%93%9C-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8-%EA%B5%AC%ED%98%84
      */
     const handleUpload = async () => {
         if (!selectedFile) {
@@ -65,9 +68,10 @@ export default function BinaryFileUpload() {
             formData.append("file", selectedFile);
 
             // 파일 업로드 요청
-            await uploadFile("POST", "/file/upload", formData, (progressEvent: AxiosProgressEvent) => {
+            await uploadFile("POST", "/file/upload",
+                formData, (progressEvent: AxiosProgressEvent) => {
                 if (progressEvent.total !== undefined) {
-                    const progress = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+                    const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     setUploadProgress(progress); // 진행 상태 업데이트
                     setShowProgressBar(true); // 프로그레스 바 표시
                 }

@@ -32,7 +32,7 @@ export const request = async (
 
 /**
  * 파일 업로드 요청을 보내는 함수
- *
+ * 참고: https://hagohobby.tistory.com/22
  * @param method HTTP 메소드
  * @param url 요청 URL
  * @param data 업로드할 파일 데이터
@@ -60,7 +60,7 @@ export const uploadFile = async (
         method,
         url: SERVER_DEPLOY_URL + url,
         data: formData,
-        onUploadProgress, // Upload progress handler
+        onUploadProgress,
     })
         .then((res) => {
             document.body.style.cursor = "default";

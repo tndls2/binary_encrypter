@@ -3,6 +3,12 @@ import React, {createContext, useContext, useState, useEffect, ReactNode} from '
 import {request} from "../utils/axios";
 import {EncryptionLog} from "../types/encryptionLog";
 
+/*
+context API 적용
+참고: https://velog.io/@apro_xo/React.js-context-APIFeat.-useContext
+참고: https://junheedot.tistory.com/entry/%EC%98%88%EC%A0%9C%EB%A1%9C-%EB%B0%B0%EC%9A%B0%EB%8A%94-react-context
+*/
+
 interface EncryptionLogsContextProps {
     data: EncryptionLog[];
     page: number;  // 현재 페이지 번호
@@ -11,7 +17,7 @@ interface EncryptionLogsContextProps {
     fetchEncryptionLogs: (page: number) => void;
 }
 
-const EncryptionLogsContext = createContext<EncryptionLogsContextProps|undefined>(undefined);
+const EncryptionLogsContext = createContext<EncryptionLogsContextProps|undefined>(undefined); //context 생성
 
 export const useEncryptionLogs = () => {
     const context = useContext(EncryptionLogsContext);
