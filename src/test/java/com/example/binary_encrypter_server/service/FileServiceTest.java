@@ -3,6 +3,7 @@ package com.example.binary_encrypter_server.service;
 import com.example.binary_encrypter_server.dto.request.EncryptionLogRequestDTO;
 import com.example.binary_encrypter_server.dto.request.FileRequestDTO;
 import com.example.binary_encrypter_server.dto.response.EncryptResponseDTO;
+import com.example.binary_encrypter_server.exceptions.CommonErrorCode;
 import com.example.binary_encrypter_server.exceptions.CustomException;
 import com.example.binary_encrypter_server.exceptions.FileErrorCode;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +74,7 @@ class FileServiceTest {
         // given
         MultipartFile file = new MockMultipartFile("test.bin", "test.bin",
                 "application/octet-stream", "Test file content".getBytes());
-        EncryptResponseDTO encryptResponseDTO = new EncryptResponseDTO("encryptedContent".getBytes(), "iv");
+        EncryptResponseDTO encryptResponseDTO = new EncryptResponseDTO("encryptedContent".getBytes(), "iv".getBytes());
 
         // EncryptionService Mock 객체 생성
         EncryptionService encryptionServiceMock = mock(EncryptionService.class);
@@ -135,13 +136,13 @@ class FileServiceTest {
 
     @Test
     @DisplayName("파일을 특정 경로에 저장하는 메소드 테스트")
-    void uploadFileToPath () {
+    void uploadFileToPath() {
         // given
         String originalFileName = "test_upload_file.bin";
         MultipartFile file = new MockMultipartFile(originalFileName, originalFileName, "application/octet-stream", "Test file content".getBytes());
 
         // when
-        Path uploadedFilePath = fileService.uploadFileToPath(file);
+        Path uploadedFilePath = fileService.saveFile(file, null);
 
         // then
         assertNotNull(uploadedFilePath);
@@ -152,8 +153,16 @@ class FileServiceTest {
                 .resolve(TEST_FILE_DIRECTORY)
                 .resolve(originalFileName)
                 .normalize();
-        assertEquals(expectedFilePath.toString(), uploadedFilePath.toString());
+
+        // 테스트 코드에서 기대하는 절대 경로로 변환
+        Path expectedAbsolutePath = expectedFilePath.toAbsolutePath();
+
+        // 반환된 경로도 절대 경로로 변환
+        Path actualAbsolutePath = uploadedFilePath.toAbsolutePath();
+
+        assertEquals(expectedAbsolutePath.toString(), actualAbsolutePath.toString());
     }
+
 
     @Nested
     @DisplayName("파일의 content 가져오는 메소드 테스트")
@@ -184,10 +193,12 @@ class FileServiceTest {
                     .hasFieldOrPropertyWithValue("errorCode", FileErrorCode.INVALID_FILE_PATH);
         }
     }
-
-    @Test
-    @DisplayName("특정 경로에 새로운 파일 생성하는 메소드 테스트")
-    void createFileSuccess() {
+    @Nested
+    @DisplayName("특정 경로에 파일을 저장하는 메소드")
+    class saveFile{
+        @Test
+        @DisplayName("파일명+파일 내용을 파라미터로 넘기면 특정 경로에 파일 저장")
+        void saveFileByFileRequestDTOSuccess () {
         // given
         String newName = "test_create_file.bin";
         FileRequestDTO fileRequestDTO = new FileRequestDTO();
@@ -195,26 +206,37 @@ class FileServiceTest {
         fileRequestDTO.setContent("New file content".getBytes());
 
         // when
-        fileService.createFile(fileRequestDTO);
+        fileService.saveFile(null, fileRequestDTO);
 
         // then
         Path filePath = Paths.get(TEST_FILE_DIRECTORY).resolve(newName);
         assertTrue(Files.exists(filePath));
-        assertDoesNotThrow(() -> fileService.createFile(fileRequestDTO));
-    }
+        assertDoesNotThrow(() -> fileService.saveFile(null, fileRequestDTO));
+        }
 
+        @Test
+        @DisplayName("파일을 파라미터로 넘기면 특정 경로에 파일 저장")
+        void saveFileByMultipartFileSuccess () throws IOException {
+            // given
+            MultipartFile file = new MockMultipartFile("test.bin", "test.bin",
+                    "application/octet-stream", "Test file content".getBytes());
 
-    @Test
-    @DisplayName("새로운 파일명 생성하는 메소드 테스트")
-    void createFileName_Success() {
-        // given
-        String originName = "test.bin";
-        String end = "_new";
+            // when
+            fileService.saveFile(file, null);
 
-        // when
-        String newFileName = fileService.createFileName(originName, end);
+            // then
+            Path filePath = Paths.get(TEST_FILE_DIRECTORY).resolve(file.getOriginalFilename());
+            assertTrue(Files.exists(filePath));
+            assertDoesNotThrow(() -> fileService.saveFile(file, null));
+        }
 
-        // then
-        assertEquals("test_new.bin", newFileName);
+        @Test
+        @DisplayName("파라미터 값이 잘못 입력된 경우 INVALID_PARAMETER 발생")
+        void saveFileFail () {
+            // when, then
+            assertThatThrownBy(() -> fileService.saveFile(null, null))
+                    .isInstanceOf(CustomException.class)
+                    .hasFieldOrPropertyWithValue("errorCode", CommonErrorCode.INVALID_PARAMETER);
+        }
     }
 }

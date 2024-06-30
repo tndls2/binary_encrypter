@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 // 참고: https://mangkyu.tistory.com/205
-@RestControllerAdvice
+@RestControllerAdvice  //전역적으로 예외처리 되도록 함
 @Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -30,6 +30,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(errorCode);
     }
 
+    // 이하 deafult
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e) {
         log.warn("handleIllegalArgument", e);

@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum FileErrorCode implements ErrorCode{
     UPLOAD_FILE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다."),
-    CREATE_FILE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "파일 생성에 실패했습니다."),
+    SAVE_FILE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "파일 저장에 실패했습니다."),
     DOWNLOAD_FILE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "파일 다운로드에 실패했습니다."),
     INVALID_FILE_PATH(HttpStatus.NOT_FOUND, "파일 경로에서 해당 파일을 가져올 수 없습니다."),
     NOT_FOUND_FILE(HttpStatus.NOT_FOUND, "해당 파일을 가져올 수 없습니다."),

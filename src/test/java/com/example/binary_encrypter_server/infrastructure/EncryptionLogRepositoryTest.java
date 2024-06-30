@@ -34,23 +34,23 @@ class EncryptionLogRepositoryTest {
                 .createdAt(LocalDateTime.now().minusSeconds(2))  // log1은 현재 시간에서 2초 전에 생성된 것으로 설정
                 .originFile("origin.env")
                 .encryptedFile("origin_enc.env")
-                .iv("123456")
+                .iv(new byte[]{10, 15, 20, 25})
                 .build();
 
         log2 = EncryptionLog.builder()
                 .createdAt(LocalDateTime.now().minusSeconds(1))  // log2는 현재 시간에서 1초 전에 생성된 것으로 설정
                 .originFile("origin_2.env")
                 .encryptedFile("origin_2_enc.env")
-                .iv("123456")
+                .iv(new byte[]{10, 15, 20, 25})
                 .build();
 
     }
 
     @Nested
-    @DisplayName("모든 EncryptionLog 데이터를 id 내림차순으로 조회하는 메소드 테스트")
+    @DisplayName("모든 EncryptionLog 데이터를 최신순으로 조회하는 메소드 테스트")
     class findAllByOrderByIdDesc{
         @Test
-        @DisplayName("모든 데이터 출력하는지 확인")
+        @DisplayName("모든 데이터를 출력하는지 확인")
         void findAllByOrderByIdDescTotalElements() {
             // given
             encryptionLogRepository.save(log1);
@@ -66,7 +66,7 @@ class EncryptionLogRepositoryTest {
         }
 
         @Test
-        @DisplayName("id 내림차순으로 데이터 정렬하는지 확인")
+        @DisplayName("최신순(id 내림차순)으로 데이터 정렬하는지 확인")
         void findAllByOrderByIdDescSort() {
             // given
             encryptionLogRepository.save(log1);

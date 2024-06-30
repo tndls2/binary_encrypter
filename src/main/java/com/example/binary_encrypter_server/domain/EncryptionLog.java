@@ -17,8 +17,9 @@ public class EncryptionLog {
     @Column(name = "encryption_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String iv;
+    @Lob
+    @Column(nullable = false, columnDefinition="BLOB")  // 참고: https://kogle.tistory.com/250
+    private byte[] iv;
 
     @Column(nullable = false)
     private String originFile;

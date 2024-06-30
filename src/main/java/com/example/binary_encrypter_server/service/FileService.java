@@ -4,6 +4,7 @@ import com.example.binary_encrypter_server.dto.request.EncryptionLogRequestDTO;
 import com.example.binary_encrypter_server.dto.request.FileRequestDTO;
 import com.example.binary_encrypter_server.dto.response.EncryptResponseDTO;
 import com.example.binary_encrypter_server.dto.response.FileResponseDTO;
+import com.example.binary_encrypter_server.exceptions.CommonErrorCode;
 import com.example.binary_encrypter_server.exceptions.CustomException;
 import com.example.binary_encrypter_server.exceptions.FileErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -53,8 +54,8 @@ public class FileService {
             throw new CustomException(FileErrorCode.INVALID_FILE);
         }
 
-        // 특정 경로에 파일을 저장
-        Path targetPath = uploadFileToPath(file);
+        // 파일을 저장
+        Path targetPath = saveFile(file, null);
 
         // 파일 내용 암호화
         byte[] content = new byte[0];
@@ -66,9 +67,9 @@ public class FileService {
         String originName = fileDTO.getFileName();
         String newName = createFileName(originName, "_enc");  // 파일명 + _enc
 
-        // 새로운 파일 생성
+        // 암호화된 파일 저장
         FileRequestDTO createFileRequestDTO = new FileRequestDTO(newName, encryptResponseDto.getEncryptedContent());
-        createFile(createFileRequestDTO);
+        saveFile(null, createFileRequestDTO);
 
         // 암호화 이력 생성
         EncryptionLogRequestDTO createEncryptionLogRequestDTO = new EncryptionLogRequestDTO(
@@ -95,26 +96,6 @@ public class FileService {
         }
     }
 
-    /**
-     * 파일을 특정 경로에 저장
-     * @param file 파일
-     * @throws IOException 지정된 경로에 파일을 생성하지 못한 경우
-     */
-    public Path uploadFileToPath(MultipartFile file){
-        String fileName = file.getOriginalFilename();
-        // 1. 업로드 파일 특정 경로에 저장
-        Path filePath = Paths.get(FILE_PATH).toAbsolutePath().normalize();
-        Path targetPath = filePath.resolve(fileName).normalize();
-
-        try {
-            Files.createDirectories(filePath); // 경로가 없는 경우 디렉토리 생성
-            file.transferTo(targetPath);
-        } catch (IOException e) {
-            throw new CustomException(FileErrorCode.CREATE_FILE_FAIL);
-        }
-
-        return targetPath;
-    }
 
     /**
      * 파일의 content 가져오기
@@ -136,20 +117,39 @@ public class FileService {
     }
 
     /**
-     * 특정 경로에 새로운 파일 생성
+     * 특정 경로에 파일을 저장
+     * @apiNote MultipartFile이나 FileRequestDTO 중 하나를 입력으로 받아 파일을 저장
+     * @param multipartFile 파일
      * @param fileRequestDTO 파일명, 파일 내용
+     * @throws IllegalArgumentException 파라미터값이 모두 null인 경우
      * @throws CustomException 파일을 생성할 수 없는 경우
+     * @return 저장된 파일의 경로
      */
-    public void createFile(FileRequestDTO fileRequestDTO) {
-        String fileName = fileRequestDTO.getFileName();
-        Path filePath = Paths.get(FILE_PATH).resolve(fileName).normalize();
-        byte[] content = fileRequestDTO.getContent();
+    public Path saveFile(MultipartFile multipartFile, FileRequestDTO fileRequestDTO) {
+        String fileName;
+        byte[] content;
 
         try {
-            Files.createDirectories(filePath.getParent()); // 경로가 없는 경우 디렉토리 생성
-            Files.write(filePath, content); // 파일 생성
+            if (multipartFile != null) {
+                // MultipartFile 객체가 제공된 경우
+                fileName = multipartFile.getOriginalFilename();
+                content = multipartFile.getBytes();
+            } else if (fileRequestDTO != null) {
+                // FileRequestDTO 객체가 제공된 경우
+                fileName = fileRequestDTO.getFileName();
+                content = fileRequestDTO.getContent();
+            } else {
+                throw new CustomException(CommonErrorCode.INVALID_PARAMETER);
+            }
+
+            // 파일 경로를 설정하고, 필요한 디렉토리 생성
+            Path filePath = Paths.get(FILE_PATH).resolve(fileName).normalize();
+            Files.createDirectories(filePath.getParent());
+            Files.write(filePath, content);  // 파일을 지정된 경로에 write
+
+            return filePath;
         } catch (IOException e) {
-            throw new CustomException(FileErrorCode.CREATE_FILE_FAIL);
+            throw new CustomException(FileErrorCode.SAVE_FILE_FAIL);
         }
     }
 

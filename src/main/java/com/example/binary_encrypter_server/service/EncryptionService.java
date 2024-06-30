@@ -44,14 +44,13 @@ public class EncryptionService {
         }
         PageRequest pageable = PageRequest.of(page, size);
         return encryptionLogRepository.findAllByOrderByIdDesc(pageable)
-                .map(EncryptionLogResponseDTO::fromEntity);
+                .map(EncryptionLogResponseDTO::fromEntity);  // iv, createdAt 형변환하여 나타냄
     }
 
     /**
      * AES-128 암호화
      * @apiNote  1. AES-128 암호 설정
      *  2. 암호화
-     *  3. IV 형변환
      * @param content 파일 내용
      * @return
      *      1. 암호화된 내용
@@ -66,11 +65,8 @@ public class EncryptionService {
         // 암호화
         byte[] encryptedContent = useCipher(cipher, key, iv, content);
 
-        // IV를 16진수 문자열로 변환(db 저장에 적절한 형태로 변환)
-        String stringIV = byteArrayToHexaString(iv);
-
         // EncryptionLog Response DTO 생성
-        return new EncryptResponseDTO(encryptedContent, stringIV);
+        return new EncryptResponseDTO(encryptedContent, iv);
     }
 
     /**
@@ -129,19 +125,5 @@ public class EncryptionService {
      */
     public void createEncryptionLog(EncryptionLogRequestDTO requestDTO) {
         encryptionLogRepository.save(requestDTO.toEntity());
-    }
-
-    /**
-     * byte array -> 16진수로 변환하여 반환*
-     * @param bytes byte array 값
-     * @return hex 값
-     */
-    public static String byteArrayToHexaString(byte[] bytes) {
-        // 참고: https://3edc.tistory.com/21
-        StringBuilder builder = new StringBuilder();
-        for (byte data : bytes) {
-            builder.append(String.format("%02X", data));
-        }
-        return builder.toString();
     }
 }

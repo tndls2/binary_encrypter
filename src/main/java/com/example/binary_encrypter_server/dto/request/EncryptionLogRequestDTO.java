@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class EncryptionLogRequestDTO {
     private String originFile;
     private String encryptedFile;
-    private String iv;
+    private byte[] iv;
 
     public EncryptionLog toEntity() {
         return EncryptionLog.builder()

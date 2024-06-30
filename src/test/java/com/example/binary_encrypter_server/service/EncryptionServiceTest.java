@@ -26,12 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+
 @SpringBootTest
 @TestPropertySource("classpath:application-test.properties")
 @Transactional
@@ -169,23 +167,9 @@ class EncryptionServiceTest {
     @DisplayName("암호화 이력 생성하는 메소드 테스트")
     void createEncryptionLog() {
         // given
-        EncryptionLogRequestDTO requestDTO = new EncryptionLogRequestDTO("origin.txt", "encrypted.txt", "123456");
+        EncryptionLogRequestDTO requestDTO = new EncryptionLogRequestDTO("origin.txt", "encrypted.txt", new byte[]{10, 15, 20, 25});
 
         // when, then
         assertDoesNotThrow(() -> encryptionService.createEncryptionLog(requestDTO));
-    }
-
-    @Test
-    @DisplayName("byte array -> 16진수 문자열 변환하는 메소드 테스트")
-    void byteArrayToHexaString() {
-        // given
-        byte[] bytes = {10, 15, 20, 25};
-
-        // when
-        String hexString = EncryptionService.byteArrayToHexaString(bytes);
-
-        // then
-        assertNotNull(hexString);
-        assertEquals("0A0F1419", hexString);
     }
 }

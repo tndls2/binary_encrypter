@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class EncryptResponseDTO {
     private byte[] encryptedContent;
-    private String iv;
+    private byte[] iv;
 }
