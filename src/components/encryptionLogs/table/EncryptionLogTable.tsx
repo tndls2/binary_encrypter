@@ -31,7 +31,9 @@ export default function EncryptionLogTable() {
                 fileName
             );
             console.log(res);
+            window.alert("파일 다운로드에 성공했습니다.");
         } catch (e) {
+            window.alert("오류: 파일 다온로드 과정에서 오류가 발생했습니다.")
             console.log(e);
         }
     };

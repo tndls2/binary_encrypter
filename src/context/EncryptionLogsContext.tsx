@@ -51,6 +51,7 @@ export const EncryptionLogsProvider = ({ children }: { children: ReactNode }) =>
             setData(res.data.content);
             setTotalPage(res.data.totalPages);
         } catch (e: any) {
+            window.alert("오류: 암호화 이력 조회 과정에서 오류가 발생했습니다.");
             console.log(e);
         }
     };

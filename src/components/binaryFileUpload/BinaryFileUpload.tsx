@@ -78,14 +78,14 @@ export default function BinaryFileUpload() {
             });
 
             // 업로드 완료 후 성공 알림
-            window.alert("File uploaded successfully");
+            window.alert("파일 업로드를 성공했습니다.");
             setShowProgressBar(false);
 
             // 페이지를 첫 페이지로 설정하고 이력 가져오기
             page !== 0 ? setPage(0) : await fetchEncryptionLogs(0);
         } catch (error) {
             // 업로드 실패 시 오류 알림
-            window.alert("Failed to upload file");
+            window.alert("오류: 파일 업로드 과정에서 오류가 발생했습니다.");
         } finally {
             setUploading(false); // 업로드 종료
             setUploadProgress(0); // 진행 상태 초기화
