@@ -6,8 +6,6 @@
       <change beforePath="$PROJECT_DIR$/../binary-encrypter" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/binaryFileUpload/BinaryFileUpload.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/binaryFileUpload/BinaryFileUpload.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/encryptionLogs/table/EncryptionLogTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/encryptionLogs/table/EncryptionLogTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/context/EncryptionLogsContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/context/EncryptionLogsContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../binary_encrypter_server" beforeDir="false" afterPath="$PROJECT_DIR$/../binary_encrypter_server" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,7 +83,9 @@
       <workItem from="1719568313593" duration="1235000" />
       <workItem from="1719569553990" duration="10567000" />
       <workItem from="1719635316836" duration="23598000" />
-      <workItem from="1719750389705" duration="5077000" />
+      <workItem from="1719750389705" duration="5337000" />
+      <workItem from="1719793290858" duration="438000" />
+      <workItem from="1719794157637" duration="4606000" />
     </task>
     <servers />
   </component>

@@ -70,7 +70,7 @@ export default function BinaryFileUpload() {
             // 파일 업로드 요청
             await uploadFile("POST", "/file/upload",
                 formData, (progressEvent: AxiosProgressEvent) => {
-                if (progressEvent.total !== undefined) {
+                if (progressEvent.total !== undefined &&  progressEvent.loaded !== progressEvent.total ) {
                     const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     setUploadProgress(progress); // 진행 상태 업데이트
                     setShowProgressBar(true); // 프로그레스 바 표시
