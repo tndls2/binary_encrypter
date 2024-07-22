@@ -1,0 +1,14 @@
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+    line-height: 0;
+}
+
+.pagination svg {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+}
