@@ -13,6 +13,7 @@
 7. [실행 ⚙️](#%EF%B8%8F-실행)
 8. [테스트 케이스 🛠](#-테스트-케이스)
 9. [구현 내용 👩‍💻](#-구현-내용)
+    - [API 명세서📑](#-api-명세서)
     - [Client 🖥](#-client)
       - [progress bar](#1-progress-bar)
       - [contextAPI](#2-context-api)
@@ -210,6 +211,9 @@
   <img width="1148" alt="test_case" src="https://github.com/user-attachments/assets/ba4b33f6-e12e-46e5-a741-6dd67b35bdf5">
 
 # 👩‍💻 구현 내용
+## 📑 API 명세서
+https://documenter.getpostman.com/view/26455565/2sA3kdAHwn
+
 ## 🖥 Client
   ### 1. Progress Bar
   
