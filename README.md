@@ -55,8 +55,7 @@
   | **데이터베이스** | H2 Database <br> - 개발용 Embedded 방식 <br>  - 테스트용 In-Memory 방식) |
 
 # 📂 소프트웨어 아키텍처
-
-![software_architecture](https://github.com/user-attachments/assets/c41134dd-eee9-48d0-917a-cfce34b932c8)
+![encrypter_subject drawio](https://github.com/user-attachments/assets/4c71af54-5fb5-4a45-890d-2f6e4fcb2b09)
 
 # 📑 시나리오
 
