@@ -34,7 +34,7 @@ public class FileController {
      *          6. 파일 내용을 읽어오지 못한 경우
      *          7. 암호화한 파일을 특정 경로에 저장하는 것을 실패한 경우
      */
-    @PostMapping("/upload")
+    @PostMapping("/")
     public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file) {
         fileService.uploadFile(file);
         return ResponseEntity.ok(DefaultResponse.res(StatusCode.OK, ResponseMessage.UPLOAD_FILE));
@@ -50,7 +50,7 @@ public class FileController {
      *      1. 다운로드를 명시한 header
      *      2. 다운로드할 파일
      */
-    @GetMapping("/{name}/download")
+    @GetMapping("/{name}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String name) {
         Resource resource = fileService.downloadFile(name);
 
