@@ -66,9 +66,9 @@ export default function BinaryFileUpload() {
         try {
             const formData = new FormData();
             formData.append("file", selectedFile);
-
+            console.log('업로드')
             // 파일 업로드 요청
-            await uploadFile("POST", "/file/upload",
+            await uploadFile("POST", "/file/",
                 formData, (progressEvent: AxiosProgressEvent) => {
                 if (progressEvent.total !== undefined &&  progressEvent.loaded !== progressEvent.total ) {
                     const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);

@@ -27,7 +27,7 @@ export default function EncryptionLogTable() {
         try {
             const res = await requestFile(
                 "GET",
-                `/file/${fileName}/download`,
+                `/file/${fileName}`,
                 fileName
             );
             console.log(res);
