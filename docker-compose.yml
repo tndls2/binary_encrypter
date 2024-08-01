@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  react:
+    volumes:
+      - ${PWD}/client:/src
+    build:
+      context: ${PWD}/client
+      dockerfile: ${PWD}/client/Dockerfile
+    ports:
+      - 3000:3000
+
+  spring:
+    build:
+      context: ${PWD}/server
+      dockerfile: ${PWD}/server/Dockerfile
+    ports:
+      - 8080:8080
