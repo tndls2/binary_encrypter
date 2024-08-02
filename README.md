@@ -1,4 +1,5 @@
 # 🔒 바이너리 파일 암호화 시스템 🔒
+<img width="1054" alt="system_image" src="https://github.com/user-attachments/assets/7775bb51-cbab-4674-91c7-fcede944bf2f">
 
 ### 목차
 1. [시스템 개요 📖](#-시스템-개요)
@@ -411,4 +412,7 @@ https://documenter.getpostman.com/view/26455565/2sA3kdAHwn
 
 ## 🖥 DevOps
   ### 1. Docker
+  <img width="1221" alt="docker_container" src="https://github.com/user-attachments/assets/c7250d8e-796c-487d-9a2e-dba1e5089d71">
+  <img width="1221" alt="docker_container_details" src="https://github.com/user-attachments/assets/ba8347a6-5815-4b43-94c5-177e23898bb0">
+
   ### 2. AWS
