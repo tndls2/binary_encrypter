@@ -39,5 +39,5 @@ tasks.named('test') {
 }
 
 bootJar {
-    archiveFileName = 'application.jar'
+    archiveFileName = 'binary_encrypter_server-0.0.1-SNAPSHOT-plain.jar'
 }

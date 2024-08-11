@@ -4,13 +4,11 @@ services:
   client:
 #    volumes:
 #      - ${PWD}/client:/src
-    platform: linux/amd64
     image: tndls3026/binary_encrypter_client
     ports:
       - 3000:3000
 
   server:
-    platform: linux/amd64
     image: tndls3026/binary_encrypter_server
     ports:
       - 8080:8080
