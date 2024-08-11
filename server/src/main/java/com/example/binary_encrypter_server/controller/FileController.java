@@ -27,12 +27,12 @@ public class FileController {
      * @param file 사용자가 업로드한 파일
      * @throws CustomException
      *          1. 업로드한 파일이 binary file이 아닌 경우
-     *          2. 파일 경로에 파일이 존재하지 않는 경우
+     *          2. S3 bucket에 파일이 존재하지 않는 경우
      *          3. 암호화에 실패한 경우
      *          4. 암호화 이력 저장에 실패한 경우
-     *          5. 업로드한 파일을 특정 경로에 저장하는 것을 실패한 경우
+     *          5. 업로드한 파일을 S3 bucket에 저장하는 것을 실패한 경우
      *          6. 파일 내용을 읽어오지 못한 경우
-     *          7. 암호화한 파일을 특정 경로에 저장하는 것을 실패한 경우
+     *          7. 암호화한 파일을 S3 bucket에 저장하는 것을 실패한 경우
      */
     @PostMapping("/")
     public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file) {
