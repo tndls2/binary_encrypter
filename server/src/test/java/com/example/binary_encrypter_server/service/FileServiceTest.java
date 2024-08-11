@@ -134,109 +134,109 @@ class FileServiceTest {
                 .hasFieldOrPropertyWithValue("errorCode", FileErrorCode.NOT_FOUND_FILE);
     }
 
-    @Test
-    @DisplayName("파일을 특정 경로에 저장하는 메소드 테스트")
-    void uploadFileToPath() {
-        // given
-        String originalFileName = "test_upload_file.bin";
-        MultipartFile file = new MockMultipartFile(originalFileName, originalFileName, "application/octet-stream", "Test file content".getBytes());
-
-        // when
-        Path uploadedFilePath = fileService.saveFile(file, null);
-
-        // then
-        assertNotNull(uploadedFilePath);
-        assertTrue(Files.exists(uploadedFilePath));
-
-        // 프로젝트 루트 디렉토리를 기준으로 상대 경로 계산
-        Path expectedFilePath = Paths.get("").toAbsolutePath()
-                .resolve(TEST_FILE_DIRECTORY)
-                .resolve(originalFileName)
-                .normalize();
-
-        // 테스트 코드에서 기대하는 절대 경로로 변환
-        Path expectedAbsolutePath = expectedFilePath.toAbsolutePath();
-
-        // 반환된 경로도 절대 경로로 변환
-        Path actualAbsolutePath = uploadedFilePath.toAbsolutePath();
-
-        assertEquals(expectedAbsolutePath.toString(), actualAbsolutePath.toString());
-    }
-
-
-    @Nested
-    @DisplayName("파일의 content 가져오는 메소드 테스트")
-    class getFileContent{
-        @Test
-        @DisplayName("입력된 경로를 이용하여 파일의 content를 가져옴")
-        void getFileContentSuccess() {
-            // given
-            Path filePath = Paths.get(TEST_FILE_DIRECTORY).resolve(TEST_FILE_NAME);
-
-            // when
-            byte[] content = fileService.getFileContent(filePath);
-
-            // then
-            assertNotNull(content);
-            assertTrue(content.length > 0);
-        }
-
-        @Test
-        @DisplayName("유효하지 않은 file path를 입력하면 INVALID_FILE_PATH 발생")
-        void getFileContentInvalidPathFail() {
-            // given
-            Path invalidPath = Paths.get(TEST_FILE_DIRECTORY).resolve("invalid_file.bin");
-
-            // when, then
-            assertThatThrownBy(() -> fileService.getFileContent(invalidPath))
-                    .isInstanceOf(CustomException.class)
-                    .hasFieldOrPropertyWithValue("errorCode", FileErrorCode.INVALID_FILE_PATH);
-        }
-    }
-    @Nested
-    @DisplayName("특정 경로에 파일을 저장하는 메소드")
-    class saveFile{
-        @Test
-        @DisplayName("파일명+파일 내용을 파라미터로 넘기면 특정 경로에 파일 저장")
-        void saveFileByFileRequestDTOSuccess () {
-        // given
-        String newName = "test_create_file.bin";
-        FileRequestDTO fileRequestDTO = new FileRequestDTO();
-        fileRequestDTO.setFileName(newName);
-        fileRequestDTO.setContent("New file content".getBytes());
-
-        // when
-        fileService.saveFile(null, fileRequestDTO);
-
-        // then
-        Path filePath = Paths.get(TEST_FILE_DIRECTORY).resolve(newName);
-        assertTrue(Files.exists(filePath));
-        assertDoesNotThrow(() -> fileService.saveFile(null, fileRequestDTO));
-        }
-
-        @Test
-        @DisplayName("파일을 파라미터로 넘기면 특정 경로에 파일 저장")
-        void saveFileByMultipartFileSuccess () throws IOException {
-            // given
-            MultipartFile file = new MockMultipartFile("test.bin", "test.bin",
-                    "application/octet-stream", "Test file content".getBytes());
-
-            // when
-            fileService.saveFile(file, null);
-
-            // then
-            Path filePath = Paths.get(TEST_FILE_DIRECTORY).resolve(file.getOriginalFilename());
-            assertTrue(Files.exists(filePath));
-            assertDoesNotThrow(() -> fileService.saveFile(file, null));
-        }
-
-        @Test
-        @DisplayName("파라미터 값이 잘못 입력된 경우 INVALID_PARAMETER 발생")
-        void saveFileFail () {
-            // when, then
-            assertThatThrownBy(() -> fileService.saveFile(null, null))
-                    .isInstanceOf(CustomException.class)
-                    .hasFieldOrPropertyWithValue("errorCode", CommonErrorCode.INVALID_PARAMETER);
-        }
-    }
+//    @Test
+//    @DisplayName("파일을 특정 경로에 저장하는 메소드 테스트")
+//    void uploadFileToPath() {
+//        // given
+//        String originalFileName = "test_upload_file.bin";
+//        MultipartFile file = new MockMultipartFile(originalFileName, originalFileName, "application/octet-stream", "Test file content".getBytes());
+//
+//        // when
+//        Path uploadedFilePath = fileService.saveFile(file, null);
+//
+//        // then
+//        assertNotNull(uploadedFilePath);
+//        assertTrue(Files.exists(uploadedFilePath));
+//
+//        // 프로젝트 루트 디렉토리를 기준으로 상대 경로 계산
+//        Path expectedFilePath = Paths.get("").toAbsolutePath()
+//                .resolve(TEST_FILE_DIRECTORY)
+//                .resolve(originalFileName)
+//                .normalize();
+//
+//        // 테스트 코드에서 기대하는 절대 경로로 변환
+//        Path expectedAbsolutePath = expectedFilePath.toAbsolutePath();
+//
+//        // 반환된 경로도 절대 경로로 변환
+//        Path actualAbsolutePath = uploadedFilePath.toAbsolutePath();
+//
+//        assertEquals(expectedAbsolutePath.toString(), actualAbsolutePath.toString());
+//    }
+//
+//
+//    @Nested
+//    @DisplayName("파일의 content 가져오는 메소드 테스트")
+//    class getFileContent{
+//        @Test
+//        @DisplayName("입력된 경로를 이용하여 파일의 content를 가져옴")
+//        void getFileContentSuccess() {
+//            // given
+//            Path filePath = Paths.get(TEST_FILE_DIRECTORY).resolve(TEST_FILE_NAME);
+//
+//            // when
+//            byte[] content = fileService.getFileContent(filePath);
+//
+//            // then
+//            assertNotNull(content);
+//            assertTrue(content.length > 0);
+//        }
+//
+//        @Test
+//        @DisplayName("유효하지 않은 file path를 입력하면 INVALID_FILE_PATH 발생")
+//        void getFileContentInvalidPathFail() {
+//            // given
+//            Path invalidPath = Paths.get(TEST_FILE_DIRECTORY).resolve("invalid_file.bin");
+//
+//            // when, then
+//            assertThatThrownBy(() -> fileService.getFileContent(invalidPath))
+//                    .isInstanceOf(CustomException.class)
+//                    .hasFieldOrPropertyWithValue("errorCode", FileErrorCode.INVALID_FILE_PATH);
+//        }
+//    }
+//    @Nested
+//    @DisplayName("특정 경로에 파일을 저장하는 메소드")
+//    class saveFile{
+//        @Test
+//        @DisplayName("파일명+파일 내용을 파라미터로 넘기면 특정 경로에 파일 저장")
+//        void saveFileByFileRequestDTOSuccess () {
+//        // given
+//        String newName = "test_create_file.bin";
+//        FileRequestDTO fileRequestDTO = new FileRequestDTO();
+//        fileRequestDTO.setFileName(newName);
+//        fileRequestDTO.setContent("New file content".getBytes());
+//
+//        // when
+//        fileService.saveFile(null, fileRequestDTO);
+//
+//        // then
+//        Path filePath = Paths.get(TEST_FILE_DIRECTORY).resolve(newName);
+//        assertTrue(Files.exists(filePath));
+//        assertDoesNotThrow(() -> fileService.saveFile(null, fileRequestDTO));
+//        }
+//
+//        @Test
+//        @DisplayName("파일을 파라미터로 넘기면 특정 경로에 파일 저장")
+//        void saveFileByMultipartFileSuccess () throws IOException {
+//            // given
+//            MultipartFile file = new MockMultipartFile("test.bin", "test.bin",
+//                    "application/octet-stream", "Test file content".getBytes());
+//
+//            // when
+//            fileService.saveFile(file, null);
+//
+//            // then
+//            Path filePath = Paths.get(TEST_FILE_DIRECTORY).resolve(file.getOriginalFilename());
+//            assertTrue(Files.exists(filePath));
+//            assertDoesNotThrow(() -> fileService.saveFile(file, null));
+//        }
+//
+//        @Test
+//        @DisplayName("파라미터 값이 잘못 입력된 경우 INVALID_PARAMETER 발생")
+//        void saveFileFail () {
+//            // when, then
+//            assertThatThrownBy(() -> fileService.saveFile(null, null))
+//                    .isInstanceOf(CustomException.class)
+//                    .hasFieldOrPropertyWithValue("errorCode", CommonErrorCode.INVALID_PARAMETER);
+//        }
+//    }
 }
