@@ -43,6 +43,7 @@
   | :---: | :---: |
   | **Postman** | API 테스트 |
   | **Git** | 프로젝트 작업 내역 관리 |
+  | **Docker** | 도커 이미지/컨테이너 설정 |
   | **WebStorm** | React 개발을 위한 IDE |
   | **IntelliJ IDEA** | Spring Boot 개발을 위한 IDE |
   | **draw.io** | 소프트웨어 아키텍처 설계도 및 Flow Chart 그리기 |
@@ -54,10 +55,11 @@
   | **운영체제** | macOS (Apple M1 칩셋) |
   | **개발 언어** | TypeScript, Java |
   | **프레임워크** | React.js, Spring Boot |
-  | **데이터베이스** | H2 Database <br> - 개발용 Embedded 방식 <br>  - 테스트용 In-Memory 방식) |
+  | **데이터베이스/클라우드** | H2 Database, Amazon S3 |
+  | **배포** | Docker, DockerHub, Amazon EC2 |
 
 # 📂 소프트웨어 아키텍처
-![encrypter_subject drawio](https://github.com/user-attachments/assets/4c71af54-5fb5-4a45-890d-2f6e4fcb2b09)
+![encrypter_subject drawio](https://github.com/user-attachments/assets/2921bb3b-01e1-4c6f-b36d-e1f6c1acec1d)
 
 # 📑 시나리오
 
