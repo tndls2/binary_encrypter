@@ -59,7 +59,9 @@
   | **배포** | Docker, DockerHub, Amazon EC2 |
 
 # 📂 소프트웨어 아키텍처
-![encrypter_subject drawio](https://github.com/user-attachments/assets/2921bb3b-01e1-4c6f-b36d-e1f6c1acec1d)
+![image](https://github.com/user-attachments/assets/c56fca02-0407-47c1-8d95-dcbe129b1557)
+
+<!--![encrypter_subject drawio](https://github.com/user-attachments/assets/2921bb3b-01e1-4c6f-b36d-e1f6c1acec1d)-->
 
 # 📑 시나리오
 
